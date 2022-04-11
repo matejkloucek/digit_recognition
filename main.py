@@ -5,7 +5,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers
 import cv2 as cv
-from tensorflow.keras.optimizers import SGD
 
 
 threshold_val = 100
@@ -25,10 +24,9 @@ if __name__ == '__main__':
     # normalizing the data
     X_train = tf.keras.utils.normalize(X_train, axis=1)
     X_test = tf.keras.utils.normalize(X_test, axis=1)
+    # reshaping the data
     X_train = X_train.reshape(( X_train.shape[0], 28, 28, 1))
     X_test = X_test.reshape((X_test.shape[0], 28, 28, 1))
-    print(np.shape(X_train))
-    print(np.shape(y_test))
 
     model = tf.keras.Sequential([
         layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', input_shape=(28, 28, 1)),
@@ -56,10 +54,6 @@ if __name__ == '__main__':
         callbacks=[early_stopping],
     )
 
-    # loss, accuracy = model.evaluate(X_test, y_test)
-    # print('accuracy: ', accuracy)
-    # print('loss: ', loss)
-
     history_df = pd.DataFrame(history.history)
     history_df.loc[:, ['loss', 'val_loss']].plot()
     history_df.loc[:, ['accuracy', 'val_accuracy']].plot()
@@ -69,11 +63,11 @@ if __name__ == '__main__':
     loaded_model = tf.keras.models.load_model('digits.model')
 
     """
+    # testing on images
     for x in range(1, 7):
         img = cv.imread(f'{x}.png')[:, :, 0]
         # np.invert makes it that the numbers are black and the backround white
         img = np.invert(np.array([img]))
-        print(img[:28])
         prediction = loaded_model.predict(img)
         # argmax is giving the index of the highest value thus the number with the highest probability assigned
         print('the result is probably: ', np.argmax(prediction))
@@ -81,7 +75,7 @@ if __name__ == '__main__':
         plt.imshow(img[0], cmap=plt.cm.binary)
         plt.show()
     """
-
+    
     capture = cv.VideoCapture(0)
     window = cv2.namedWindow('digit_recognition')
     cv.createTrackbar('threshold', 'digit_recognition', 100, 255, on_trackbar)
