@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras import layers
 import cv2 as cv
 
-# this is the main branch
+# this is the main branch comment
 
 threshold_val = 100
 
