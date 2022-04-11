@@ -17,7 +17,7 @@ def on_trackbar(val):
 
 
 if __name__ == '__main__':
-
+    """
     # loading the data
     mnist = tf.keras.datasets.mnist
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -38,9 +38,8 @@ if __name__ == '__main__':
         layers.Dense(10, activation='softmax')
     ])
 
-    # compile model
-    model.compile(optimizer=SGD(learning_rate=0.01, momentum=0.9),
-                  loss='categorical_crossentropy',
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
     early_stopping = tf.keras.callbacks.EarlyStopping(
@@ -66,7 +65,7 @@ if __name__ == '__main__':
     history_df.loc[:, ['accuracy', 'val_accuracy']].plot()
     plt.show()
     model.save('digits.model')
-
+    """
     loaded_model = tf.keras.models.load_model('digits.model')
 
     """
@@ -82,7 +81,7 @@ if __name__ == '__main__':
         plt.imshow(img[0], cmap=plt.cm.binary)
         plt.show()
     """
-    """
+
     capture = cv.VideoCapture(0)
     window = cv2.namedWindow('digit_recognition')
     cv.createTrackbar('threshold', 'digit_recognition', 100, 255, on_trackbar)
@@ -111,5 +110,5 @@ if __name__ == '__main__':
             break
     capture.release()
     cv.destroyAllWindows()
-    """
+
 
