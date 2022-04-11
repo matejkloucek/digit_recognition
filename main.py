@@ -25,8 +25,12 @@ if __name__ == '__main__':
     # normalizing the data
     X_train = tf.keras.utils.normalize(X_train, axis=1)
     X_test = tf.keras.utils.normalize(X_test, axis=1)
+    X_train = X_train.reshape(( X_train.shape[0], 28, 28, 1))
+    X_test = X_test.reshape((X_test.shape[0], 28, 28, 1))
+    print(np.shape(X_train))
+    print(np.shape(y_test))
 
-    model = layers.Sequential([
+    model = tf.keras.Sequential([
         layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', input_shape=(28, 28, 1)),
         layers.MaxPooling2D((2, 2)),
         layers.Flatten(),
