@@ -16,7 +16,7 @@ def on_trackbar(val):
 
 
 if __name__ == '__main__':
-
+    """
     # loading the data
     mnist = tf.keras.datasets.mnist
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     history_df.loc[:, ['accuracy', 'val_accuracy']].plot()
     plt.show()
     model.save('digits.model')
-
+    """
     loaded_model = tf.keras.models.load_model('digits.model')
 
     """
