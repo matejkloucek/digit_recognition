@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers
 import cv2 as cv
+from tensorflow.keras.optimizers import SGD
 
 
 threshold_val = 100
@@ -16,7 +17,7 @@ def on_trackbar(val):
 
 
 if __name__ == '__main__':
-    """
+
     # loading the data
     mnist = tf.keras.datasets.mnist
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -25,22 +26,17 @@ if __name__ == '__main__':
     X_train = tf.keras.utils.normalize(X_train, axis=1)
     X_test = tf.keras.utils.normalize(X_test, axis=1)
 
-    model = tf.keras.Sequential([
-        # all the pictures are 28x28 pixels, this layers flattens the input
-        # output will be onedimensional with 28^2 rows
-        layers.Flatten(input_shape=(28, 28)),
-        # normal neural network layer - all neurons are connected to all inputs from the previous layer
-        layers.Dense(units=128, activation='relu'),
-        layers.Dense(units=128, activation='relu'),
-        # last layer so we will have 10 units because 10 digits ... duh
-        # the softmax activation normalizes the output into probability distribution
-        layers.Dense(units=10, activation='softmax')
+    model = layers.Sequential([
+        layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', input_shape=(28, 28, 1)),
+        layers.MaxPooling2D((2, 2)),
+        layers.Flatten(),
+        layers.Dense(100, activation='relu', kernel_initializer='he_uniform'),
+        layers.Dense(10, activation='softmax')
     ])
 
-    # crossentropy is a measure of a difference between two probabilities
-    # computes the crossentropy loss between the labels and predictions
-    model.compile(optimizer='adam',
-                  loss='sparse_categorical_crossentropy',
+    # compile model
+    model.compile(optimizer=SGD(learning_rate=0.01, momentum=0.9),
+                  loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
     early_stopping = tf.keras.callbacks.EarlyStopping(
@@ -54,7 +50,7 @@ if __name__ == '__main__':
         X_train, y_train,
         validation_data=(X_test, y_test),
         epochs=3,
-        # callbacks=[early_stopping],
+        callbacks=[early_stopping],
     )
 
     # loss, accuracy = model.evaluate(X_test, y_test)
@@ -66,7 +62,7 @@ if __name__ == '__main__':
     history_df.loc[:, ['accuracy', 'val_accuracy']].plot()
     plt.show()
     model.save('digits.model')
-    """
+
     loaded_model = tf.keras.models.load_model('digits.model')
 
     """
@@ -82,7 +78,7 @@ if __name__ == '__main__':
         plt.imshow(img[0], cmap=plt.cm.binary)
         plt.show()
     """
-   
+    """
     capture = cv.VideoCapture(0)
     window = cv2.namedWindow('digit_recognition')
     cv.createTrackbar('threshold', 'digit_recognition', 100, 255, on_trackbar)
@@ -111,5 +107,5 @@ if __name__ == '__main__':
             break
     capture.release()
     cv.destroyAllWindows()
-
+    """
 
