@@ -16,6 +16,7 @@ def on_trackbar(val):
 
 
 if __name__ == '__main__':
+
     """
     # loading the data
     mnist = tf.keras.datasets.mnist
@@ -27,12 +28,15 @@ if __name__ == '__main__':
     # reshaping the data
     X_train = X_train.reshape(( X_train.shape[0], 28, 28, 1))
     X_test = X_test.reshape((X_test.shape[0], 28, 28, 1))
-
+ 
     model = tf.keras.Sequential([
-        layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', input_shape=(28, 28, 1)),
-        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(32, kernel_size=(3, 3),activation='relu',input_shape=(28, 28, 1)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Dropout(0.25),
         layers.Flatten(),
-        layers.Dense(100, activation='relu', kernel_initializer='he_uniform'),
+        layers.Dense(256, activation='relu'),
+        layers.Dropout(0.5),
         layers.Dense(10, activation='softmax')
     ])
 
@@ -50,7 +54,7 @@ if __name__ == '__main__':
     history = model.fit(
         X_train, y_train,
         validation_data=(X_test, y_test),
-        epochs=20,
+        epochs=3,
         callbacks=[early_stopping],
     )
 
@@ -91,7 +95,7 @@ if __name__ == '__main__':
         cut_frame = threshold_frame[100:380, 180:460]
         # resizing for 28x28
         resized_frame = cv.resize(cut_frame, (28, 28), interpolation=cv.INTER_AREA)
-        # test_frame = cv.resize(resized_frame, (480, 480))
+        test_frame = cv.resize(resized_frame, (480, 480))
         # making it into an array and iverting
         final_frame = np.invert(np.array([resized_frame]))
         
