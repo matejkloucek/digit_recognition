@@ -108,5 +108,3 @@ if __name__ == '__main__':
             break
     capture.release()
     cv.destroyAllWindows()
-
-
